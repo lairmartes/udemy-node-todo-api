@@ -1,4 +1,5 @@
-const _ = require('lodash');
+require('./config/config.js'); // set up environemnt before start
+const _ = require('lodash'); // supporting libraries
 const express = require('express');
 const bodyParser = require('body-parser');
 const { ObjectID } = require('mongodb');
