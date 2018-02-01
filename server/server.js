@@ -7,6 +7,7 @@ const { ObjectID } = require('mongodb');
 var mongoose = require('./db/mongoose');
 var { Todo } = require('./models/todo');
 var { User } = require('./models/user');
+var { authenticate } = require('./middleware/authenticate');
 
 var app = express();
 const port = process.env.PORT || 3000;
@@ -116,6 +117,12 @@ app.post('/users', (req, res) => {
     }).catch((e) => {
         res.status(400).send(e); // bad request if data is not correct
     });
+});
+
+// GET service to get a user by token
+// Call "authenticate".  If not valid authentication, authenticate method will raise a 401 HTTP error
+app.get('/users/me', authenticate, (req, res) => {
+    res.send(req.user);
 });
 
 app.listen(port, () => {
