@@ -43,7 +43,7 @@ UserSchema.methods.toJSON = function() {
     // use lodash to get data from object
     // return only id and email to requester
     return _.pick(userObject, ['_id', 'email']);
-}
+};
 
 // including methods
 // note: arrow (=>) can't bind function to method
