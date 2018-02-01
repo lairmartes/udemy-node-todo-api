@@ -13,6 +13,8 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
+/* Todo services */
+
 app.post('/todos', (req, res) => {
     var todo = new Todo({
         text: req.body.text
@@ -34,6 +36,7 @@ app.get('/todos', (req, res) => {
 });
 
 app.get('/todos/:id', (req, res) => {
+    // getting todo id from URL param
     var id = req.params.id;
     if (!ObjectID.isValid(id)) {
         return res.status(404).send();
@@ -69,7 +72,7 @@ app.delete('/todos/:id', (req, res) => {
 
 app.patch('/todos/:id', (req, res) => {
     var id = req.params.id;
-    var body = _.pick(req.body, ['text', 'completed']);
+    var body = _.pick(req.body, ['text', 'completed']); // lodash used here for getting todo data from string
 
     if (!ObjectID.isValid(id)) {
         return res.status(404).send();
@@ -91,6 +94,27 @@ app.patch('/todos/:id', (req, res) => {
 
     }).catch((e) => {
         res.status(400).send();
+    });
+});
+
+/* User services */
+
+app.post('/users', (req, res) => {
+    // getting user data from request
+    var body = _.pick(req.body, ['email', 'password']);
+
+    // create a mongodb user with body data
+    var user = new User(body);
+
+    // try to save
+    user.save().then(() => {
+        // after saving the user, includes token data calling user method
+        return user.generateAuthToken();
+    }).then((token) => {
+        // send token back to the caller
+        res.header('x-auth', token).send(user);
+    }).catch((e) => {
+        res.status(400).send(e); // bad request if data is not correct
     });
 });
 
