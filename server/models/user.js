@@ -102,7 +102,7 @@ UserSchema.statics.findByCredentials = function(email, password) {
             });
         });
     });
-}
+};
 
 UserSchema.pre('save', function(next) { // called automatically before object saving
     var user = this;
